@@ -1,133 +1,173 @@
-<!-- social/templates/Social/post_detail.html -->
 <!DOCTYPE html>
 <html lang="fr">
 
 <head>
-  <meta charset="UTF-8">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Détails de la Publication - Mini Réseau Social</title>
-</head>
-
-<body>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 20px;
       background-color: #f4f4f4;
+      padding: 20px 0;
     }
-  
-    .container {
+
+    .container-main {
       max-width: 800px;
-      margin: auto;
-      background: white;
+      margin: 0 auto;
+      background: #fff;
       padding: 20px;
       border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 0 10px rgb(0 0 0 / 0.1);
     }
-  
-    h1 {
-      text-align: center;
+
+    h1,
+    h2,
+    h3 {
       color: #333;
+      text-align: center;
+      margin-bottom: 1rem;
     }
-  
-    .post {
-      border: 1px solid #ccc;
+
+    .post-content {
+      padding: 15px;
+      border: 1px solid #ddd;
       border-radius: 5px;
-      padding: 10px;
-      margin-bottom: 20px;
       background-color: #fff;
+      margin-bottom: 1.5rem;
     }
-  
+
+    .post-meta {
+      font-style: italic;
+      color: #666;
+      text-align: right;
+      font-size: 0.9rem;
+    }
+
+    .comments-section {
+      margin-top: 2rem;
+    }
+
     .comment {
-      margin-left: 20px;
-      border-left: 2px solid #ccc;
-      padding-left: 10px;
-      margin-top: 5px;
-      background-color: #f9f9f9;
-    }
-  
-    .comment-form {
-      margin-top: 10px;
-    }
-  
-    .avatar {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      margin-right: 10px;
-    }
-  
-    .button {
-      background-color: #007bff;
-      color: white;
-      border: none;
       padding: 10px 15px;
+      border-left: 4px solid #007bff;
+      background-color: #f9f9f9;
+      margin-bottom: 1rem;
+      border-radius: 0 5px 5px 0;
+    }
+
+    .comment strong {
+      color: #007bff;
+    }
+
+    .comment-meta {
+      font-size: 0.8rem;
+      color: #666;
+      margin-top: 3px;
+    }
+
+    textarea {
+      width: 100%;
+      resize: vertical;
       border-radius: 5px;
-      cursor: pointer;
-    }
-  
-    .button:hover {
-      background-color: #0056b3;
-    }
-  
-    input[type="text"] {
-      width: calc(100% - 100px);
-      padding: 10px;
       border: 1px solid #ccc;
-      border-radius: 5px;
+      padding: 10px;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background-image: linear-gradient(45deg, #764ba2, #667eea);
+      border: none;
+      transition: background-image 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      background-image: linear-gradient(45deg, #667eea, #764ba2);
+    }
+
+    .like-section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 1rem;
+      justify-content: center;
+    }
+
+    .like-section span {
+      font-weight: 600;
+      color: #555;
+    }
+
+    a.back-home {
+      display: block;
+      text-align: center;
+      margin-top: 2rem;
+      font-weight: 600;
+      color: #667eea;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    a.back-home:hover {
+      color: #764ba2;
+      text-decoration: underline;
     }
   </style>
-  <h1>Détails de la Publication</h1>
+</head>
 
-  <div class="container">
-    <h2>{{ post.user.username }}</h2>
-    <p>{{ post.content }}</p>
-    <p><em>Publié le {{ post.created_at }}</em></p>
-  </div>
-  <div class="comment" style="margin: auto; width: 800px;">
-    <h3>Commentaires :</h3>
-    {% if comments.count > 0 %}
-    {% for comment in comments %}
-    <div>
-      <p><strong>{{ comment.user.username }} :</strong> {{ comment.content }}</p>
-      <p><em>Commenté le {{ comment.created_at }}</em></p>
+<body>
+  <div class="container-main">
+    <h1>Détails de la Publication</h1>
+
+    <div class="post-content">
+      <h2>{{ post.user.username }}</h2>
+      <p>{{ post.content|linebreaksbr }}</p>
+      <p class="post-meta">Publié le {{ post.created_at|date:"d/m/Y H:i" }}</p>
     </div>
-    {% endfor %}
-    {% else %}
-    <p>Aucun commentaire pour cette publication.</p>
-    {% endif %}
-  </div>
-  
 
-  <div class="container mt-4">
-    <h3>Ajouter un commentaire :</h3>
-    <form method="post">
-      {% csrf_token %}
-      <textarea name="content" rows="4" cols="50" placeholder="Écrivez votre commentaire ici..."></textarea>
-      <br>
-      <button type="submit" class="button">Commenter</button>
-    </form>
-    
-    <h3>Aimer cette publication :</h3>
-    <form action="{% url 'like_post' post.id %}" method="post">
-      {% csrf_token %}
-      <button type="submit" class="button">
-        {% if request.user in post.likes.all %}
-        Retirer le Like
-        {% else %}
-        Aimer
-        {% endif %}
-      </button>
+    <div class="comments-section">
+      <h3>Commentaires</h3>
+      {% if comments.count > 0 %}
+      {% for comment in comments %}
+      <div class="comment">
+        <p><strong>{{ comment.user.username }} :</strong> {{ comment.content|linebreaksbr }}</p>
+        <p class="comment-meta">Commenté le {{ comment.created_at|date:"d/m/Y H:i" }}</p>
+      </div>
+      {% endfor %}
+      {% else %}
+      <p class="text-center fst-italic">Aucun commentaire pour cette publication.</p>
+      {% endif %}
+    </div>
+
+    <div class="mt-4">
+      <h3>Ajouter un commentaire :</h3>
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <textarea name="content" rows="4" placeholder="Écrivez votre commentaire ici..."></textarea>
+        <button type="submit" class="btn btn-primary mt-2">Commenter</button>
+      </form>
+    </div>
+
+    <div class="like-section">
+      <form action="{% url 'like_post' post.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">
+          {% if request.user in post.likes.all %}
+          Retirer le Like
+          {% else %}
+          Aimer
+          {% endif %}
+        </button>
+      </form>
       <span>{{ post.likes.count }} J'aime</span>
-    </form>
-    
-    <a href="{% url 'home' %}">Retour à l'accueil</a>
+    </div>
+
+    <a href="{% url 'home' %}" class="back-home">← Retour à l'accueil</a>
   </div>
-  
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
